@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Compass, Loader2, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Compass, Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,17 +9,13 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
-const DEMO_EMAIL = "demo@wayfare.dev";
-const DEMO_PASSWORD = "demo1234";
-
 function LoginPage() {
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
 
   if (isAuthenticated) {
     navigate({ to: "/dashboard" });
@@ -44,27 +40,6 @@ function LoginPage() {
     }
   }
 
-  async function handleDemoLogin() {
-    setDemoLoading(true);
-    try {
-      // Try to login with demo credentials first
-      await login(DEMO_EMAIL, DEMO_PASSWORD);
-      toast.success("Welcome! You're exploring as Demo Traveller.");
-      navigate({ to: "/dashboard" });
-    } catch {
-      // Demo account doesn't exist yet — auto-create it
-      try {
-        await register("Demo Traveller", DEMO_EMAIL, DEMO_PASSWORD);
-        toast.success("Demo account created! Welcome to Wayfare.");
-        navigate({ to: "/dashboard" });
-      } catch (err: unknown) {
-        toast.error(err instanceof Error ? err.message : "Demo login failed. Try again.");
-      }
-    } finally {
-      setDemoLoading(false);
-    }
-  }
-
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Toaster />
@@ -86,38 +61,13 @@ function LoginPage() {
             </p>
           </div>
 
-          {/* Demo Login Banner */}
-          <div className="mb-6 border border-[color:var(--gold)]/30 bg-[color:var(--gold-soft)] p-4">
-            <div className="flex items-start gap-3">
-              <Sparkles className="h-4 w-4 text-gold-ink mt-0.5 shrink-0" strokeWidth={1.5} />
-              <div className="flex-1 min-w-0">
-                <p className="text-[12px] font-semibold text-foreground">Try without signing up</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  Explore all features instantly with a demo account.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleDemoLogin}
-                disabled={demoLoading}
-                className="flex shrink-0 items-center gap-1.5 border border-[color:var(--gold)] bg-background px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold-ink transition-all hover:bg-[color:var(--gold)] hover:text-background disabled:opacity-60"
-              >
-                {demoLoading ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3 w-3" strokeWidth={2} />
-                )}
-                {demoLoading ? "Loading…" : "Demo Login"}
-              </button>
+          {/* Demo Credentials Box */}
+          <div className="mb-6 border border-[color:var(--gold)]/30 bg-[color:var(--gold-soft)] p-4 text-center">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-ink">Demo Account</p>
+            <div className="mt-2 flex flex-col gap-1 text-xs">
+              <p>Email: <span className="font-mono bg-background/50 px-2 py-0.5 rounded border border-border select-all">demo@wayfare.dev</span></p>
+              <p>Password: <span className="font-mono bg-background/50 px-2 py-0.5 rounded border border-border select-all">demo1234</span></p>
             </div>
-          </div>
-
-          <div className="relative mb-6 flex items-center gap-3">
-            <div className="flex-1 border-t border-border/60" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-              or sign in with your account
-            </span>
-            <div className="flex-1 border-t border-border/60" />
           </div>
 
           <form
