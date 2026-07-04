@@ -43,10 +43,35 @@ export const register = asyncHandler(async (req, res) => {
  */
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const cleanEmail = email.toLowerCase().trim();
 
-  const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
-    "+password",
-  );
+  let user = await User.findOne({ email: cleanEmail }).select("+password");
+
+  // Server-side Demo Account Auto-Provisioning & Auto-Heal
+  if (cleanEmail === "demo@wayfare.dev") {
+    if (!user) {
+      // Auto-create demo user if they don't exist
+      user = await User.create({
+        name: "Demo Traveller",
+        email: cleanEmail,
+        password: "demo1234",
+        role: "user",
+        bio: "A curious wanderer exploring cultural secrets.",
+      });
+      // Re-fetch with password select
+      user = await User.findOne({ email: cleanEmail }).select("+password");
+    } else if (password === "demo1234") {
+      // Auto-heal password to demo1234 if it was modified
+      const ok = await user.comparePassword(password);
+      if (!ok) {
+        user.password = "demo1234";
+        await user.save();
+        // Re-fetch to get updated hash
+        user = await User.findOne({ email: cleanEmail }).select("+password");
+      }
+    }
+  }
+
   if (!user || !user.active) {
     throw ApiError.unauthorized("Invalid email or password");
   }

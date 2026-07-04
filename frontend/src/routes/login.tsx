@@ -10,7 +10,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,17 +34,6 @@ function LoginPage() {
       toast.success("Welcome back!");
       navigate({ to: "/dashboard" });
     } catch (err: unknown) {
-      if (email.trim() === "demo@wayfare.dev" && password === "demo1234") {
-        try {
-          await register("Demo Traveller", "demo@wayfare.dev", "demo1234");
-          await login("demo@wayfare.dev", "demo1234");
-          toast.success("Demo account created! Welcome to Wayfare.");
-          navigate({ to: "/dashboard" });
-          return;
-        } catch {
-          // ignore registration error and show original login error
-        }
-      }
       toast.error(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
