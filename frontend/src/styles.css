@@ -1,0 +1,106 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/400-italic.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/inter/300.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-bone: var(--bone);
+  --color-ink: var(--ink);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-ink: var(--gold-ink);
+  --color-parchment: var(--parchment);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Editorial cultural palette */
+  --bone: oklch(0.98 0.008 85);          /* #faf9f6 */
+  --parchment: oklch(0.96 0.012 80);
+  --ink: oklch(0.18 0.005 60);           /* near-black */
+  --gold: oklch(0.78 0.11 82);           /* #d4af37 */
+  --gold-soft: oklch(0.78 0.11 82 / 0.1);
+  --gold-ink: oklch(0.52 0.08 78);       /* muted gold text */
+
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--bone);
+  --secondary: oklch(0.94 0.008 80);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.94 0.008 80);
+  --muted-foreground: oklch(0.48 0.006 70);
+  --accent: var(--gold-soft);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.9 0.008 80);
+  --input: oklch(0.9 0.008 80);
+  --ring: var(--gold);
+}
+
+.dark {
+  --background: oklch(0.14 0.004 60);
+  --foreground: oklch(0.96 0.008 85);
+  --card: oklch(0.18 0.005 60);
+  --card-foreground: oklch(0.96 0.008 85);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: var(--font-serif); }
+  ::selection { background: color-mix(in oklch, var(--gold) 30%, transparent); }
+}

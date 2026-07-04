@@ -1,0 +1,6 @@
+# Wayfare
+
+> AI-powered cultural travel discovery. Personalized destinations and hidden gems, curated by Gemini.
+
+## Pages
+- [Home](/): Discovery form for cultural destinations and hidden gems.
