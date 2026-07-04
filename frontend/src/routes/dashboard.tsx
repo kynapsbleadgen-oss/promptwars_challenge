@@ -2,46 +2,23 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Compass, MapPin, Plus, Loader2, Calendar } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
-import { useAuth } from "@/lib/auth-context";
-import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { tripApi } from "@/api/tripApi";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import type { Trip, PaginatedResponse } from "@/types";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
 
-type Trip = {
-  _id: string;
-  title: string;
-  location: string;
-  interests: string[];
-  duration: string;
-  budget: string;
-  status: string;
-  intro: string;
-  destinations: { name: string; region: string; imageQuery: string }[];
-  createdAt: string;
-};
-
-type TripsResponse = {
-  items: Trip[];
-  pagination: {
-    total: number;
-    page: number;
-    pages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-};
-
 function DashboardPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useQuery<TripsResponse>({
+  const { data, isLoading, error } = useQuery<PaginatedResponse<Trip>>({
     queryKey: ["trips"],
-    queryFn: () => api<TripsResponse>("/trips"),
+    queryFn: () => tripApi.list({ page: 1, limit: 24 }),
     enabled: isAuthenticated,
   });
 

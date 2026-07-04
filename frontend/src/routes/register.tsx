@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Compass, Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,

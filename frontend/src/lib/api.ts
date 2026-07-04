@@ -1,4 +1,4 @@
-const API_BASE = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) || "http://localhost:5000/api";
+const API_BASE = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) || "https://promptwars-challenge-1.onrender.com/api";
 
 let accessToken: string | null = null;
 

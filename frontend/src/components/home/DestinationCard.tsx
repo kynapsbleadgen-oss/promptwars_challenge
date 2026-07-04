@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type { DiscoveryResult } from "@/lib/discovery.schemas";
 import { unsplashUrl } from "@/lib/image-utils";
 import { MetaRow } from "@/components/shared/MetaRow";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function DestinationCard({
   d,

@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Compass, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { useAuth } from "@/lib/auth-context";
-import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { userApi } from "@/api/userApi";
+import { extractErrorMessage } from "@/api/client";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 
@@ -12,17 +13,8 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  avatar: string;
-  bio: string;
-};
-
 function ProfilePage() {
-  const { user, isAuthenticated, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -32,7 +24,7 @@ function ProfilePage() {
   useEffect(() => {
     if (user) {
       setName(user.name);
-      setBio(user.bio || "");
+      setBio(user.bio ?? "");
     }
   }, [user]);
 
@@ -58,14 +50,14 @@ function ProfilePage() {
     if (!user) return;
     setSaving(true);
     try {
-      await api(`/users/${user._id}`, {
-        method: "PUT",
-        body: { name: name.trim(), bio: bio.trim() },
+      const updated = await userApi.update(user._id, {
+        name: name.trim(),
+        bio: bio.trim(),
       });
-      await refreshUser();
+      updateUser(updated);
       toast.success("Profile updated successfully.");
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to update profile");
+      toast.error(extractErrorMessage(err, "Failed to update profile"));
     } finally {
       setSaving(false);
     }

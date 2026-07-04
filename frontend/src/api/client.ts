@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "https://promptwars-challenge-1.onrender.com/api";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,

@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { MapPin, ArrowLeft, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { useAuth } from "@/lib/auth-context";
-import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { tripApi } from "@/api/tripApi";
+import { extractErrorMessage } from "@/api/client";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { unsplashUrl } from "@/lib/image-utils";
@@ -60,9 +61,9 @@ function TripDetailPage() {
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
 
-  const { data, isLoading, error } = useQuery<{ trip: Trip }>({
+  const { data: trip, isLoading, error } = useQuery<Trip>({
     queryKey: ["trip", id],
-    queryFn: () => api<{ trip: Trip }>(`/trips/${id}`),
+    queryFn: () => tripApi.get(id),
     enabled: isAuthenticated,
   });
 
@@ -83,17 +84,15 @@ function TripDetailPage() {
     if (!confirm("Delete this trip? This cannot be undone.")) return;
     setDeleting(true);
     try {
-      await api(`/trips/${id}`, { method: "DELETE" });
+      await tripApi.delete(id);
       toast.success("Trip deleted.");
       navigate({ to: "/dashboard" });
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Delete failed");
+      toast.error(extractErrorMessage(err, "Delete failed"));
     } finally {
       setDeleting(false);
     }
   }
-
-  const trip = data?.trip;
 
   return (
     <div className="min-h-screen bg-background text-foreground">

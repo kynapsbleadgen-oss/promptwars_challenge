@@ -1,6 +1,6 @@
 import { Compass, User, LogOut, Settings } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useState } from "react";
 

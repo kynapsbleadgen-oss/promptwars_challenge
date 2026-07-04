@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import type { DiscoveryResult } from "@/lib/discovery.schemas";
-import { api } from "@/lib/api";
+import { tripApi } from "@/api/tripApi";
+import { extractErrorMessage } from "@/api/client";
 import { SectionHeading } from "./SectionHeading";
 import { DestinationCard } from "./DestinationCard";
 import { HiddenGemCard } from "./HiddenGemCard";
@@ -18,23 +19,21 @@ export function Results({ data }: { data: DiscoveryResult }) {
   async function handleSaveTrip() {
     try {
       const firstDest = data.destinations[0];
-      const locationName = firstDest?.region?.split(",")?.[0] || firstDest?.name || "Curated Destination";
-      
-      const response = await api<{ trip: { _id: string } }>("/trips", {
-        method: "POST",
-        body: {
-          title: `Trip to ${locationName}`,
-          location: locationName,
-          intro: data.intro,
-          destinations: data.destinations,
-          hiddenGems: data.hiddenGems,
-          status: "published",
-        },
+      const locationName =
+        firstDest?.region?.split(",")?.[0] || firstDest?.name || "Curated Destination";
+
+      const trip = await tripApi.create({
+        title: `Trip to ${locationName}`,
+        location: locationName,
+        intro: data.intro,
+        destinations: data.destinations,
+        hiddenGems: data.hiddenGems,
+        status: "published",
       });
-      setTripId(response.trip._id);
+      setTripId(trip._id);
       toast.success("Journey saved to your dashboard!");
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to save journey");
+      toast.error(extractErrorMessage(err, "Failed to save journey"));
     }
   }
 

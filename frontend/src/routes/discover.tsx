@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { api } from "@/lib/api";
+import { discoveryApi } from "@/api/discoveryApi";
 import { type DiscoveryResult } from "@/lib/discovery.schemas";
 import { DURATIONS, BUDGETS } from "@/lib/constants";
 import { Toaster } from "@/components/ui/sonner";
@@ -27,18 +27,14 @@ function DiscoverPage() {
   const [budget, setBudget] = useState(BUDGETS[1]);
 
   const mutation = useMutation<DiscoveryResult, Error, void>({
-    mutationFn: async () => {
-      return await api<DiscoveryResult>("/discover", {
-        method: "POST",
-        body: {
-          location: location.trim(),
-          interests: selectedInterests,
-          duration,
-          budget,
-          travelStyle: "Cultural immersion",
-        },
-      });
-    },
+    mutationFn: () =>
+      discoveryApi.discover({
+        location: location.trim(),
+        interests: selectedInterests,
+        duration,
+        budget,
+        travelStyle: "Cultural immersion",
+      }),
     onError: (err) => toast.error(err.message || "Something went wrong"),
     onSuccess: (data) => {
       if (data.tripId) {
