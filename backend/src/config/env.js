@@ -44,7 +44,11 @@ export function loadEnv() {
     geminiApiKey: process.env.GOOGLE_GEMINI_API_KEY || "",
     geminiModel: process.env.GEMINI_MODEL || "gemini-2.0-flash",
 
-    corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    // CORS_ORIGIN can be a comma-separated list of allowed origins.
+    // e.g. "https://promptwars-challenge-three.vercel.app,http://localhost:5173"
+    corsOrigin: process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+      : ["http://localhost:5173"],
 
     rateLimitWindowMs: int(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),
     rateLimitMax: int(process.env.RATE_LIMIT_MAX, 100),

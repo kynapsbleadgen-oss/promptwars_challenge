@@ -7,8 +7,8 @@
     "backend"
   ],
   "scripts": {
-    "build": "npm run build --prefix frontend",
+    "build": "echo 'No build step required for backend'",
     "start": "node backend/src/server.js",
-    "dev": "npm run dev --prefix frontend"
+    "dev": "node backend/src/server.js"
   }
 }
