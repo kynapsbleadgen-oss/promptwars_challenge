@@ -7,7 +7,7 @@
     "backend"
   ],
   "scripts": {
-    "build": "echo 'No build step required for backend'",
+    "build": "echo 'backend - no build step'",
     "start": "node backend/src/server.js",
     "dev": "node backend/src/server.js"
   }
